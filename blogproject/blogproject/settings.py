@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blogapp',
     'widget_tweaks',
     'ckeditor',
+    'ckeditor_uploader',  
 ]
 
 MIDDLEWARE = [
@@ -133,7 +134,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'  # Comilla simple añadida al final
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 CKEDITOR_UPLOAD_PATH = "uploads/"  # Carpeta donde se guardarán las imágenes/subidas
 MEDIA_URL = '/media/'  # URL para acceder a los archivos multimedia
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Ruta absoluta a la carpeta 'media'
@@ -142,3 +146,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Ruta absoluta a la carpeta 'medi
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'blogapp:blog_list'  # Redirige aquí después de iniciar sesión, Anexado
+LOGOUT_REDIRECT_URL = 'blogapp:blog_list'  # Redirige aquí después de cerrar sesión, Anexado
+
+
+# URL a la que se redirige a los usuarios no autenticados
+#LOGIN_URL = '/login/'

@@ -25,4 +25,4 @@ urlpatterns = [
     path('', include('blogapp.urls')),  # Conecta las URLs de blogapp
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('ckeditor/upload/', ckeditor_views.upload, name='ckeditor_upload'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # ¡Importante para servir archivos multimedia!
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
