@@ -130,3 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'blogapp:blog_list'  # Redirige aquí después de iniciar sesión, Anexado
 LOGOUT_REDIRECT_URL = 'blogapp:blog_list'  # Redirige aquí después de cerrar sesión, Anexado
+
+
+# URL a la que se redirige a los usuarios no autenticados
+#LOGIN_URL = '/login/'
