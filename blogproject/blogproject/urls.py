@@ -16,8 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from ckeditor_uploader import views as ckeditor_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blogapp.urls')),  # Conecta las URLs de blogapp
-]
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('ckeditor/upload/', ckeditor_views.upload, name='ckeditor_upload'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # ¡Importante para servir archivos multimedia!
