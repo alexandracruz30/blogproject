@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'widget_tweaks',
-    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -70,20 +68,6 @@ TEMPLATES = [
         },
     },
 ]
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', 'BulletedList'],
-            ['Link', 'Image'],  # Mantenemos el botón de imagen
-            ['RemoveFormat', 'Source']
-        ],
-        'removeDialogTabs': 'image:advanced;image:Link',  # Elimina pestañas avanzadas
-        'filebrowserUploadUrl': '/ckeditor/upload/',  # Ruta para subir archivos
-    }
-}
 
 WSGI_APPLICATION = 'blogproject.wsgi.application'
 
@@ -134,9 +118,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-CKEDITOR_UPLOAD_PATH = "uploads/"  # Carpeta donde se guardarán las imágenes/subidas
-MEDIA_URL = '/media/'  # URL para acceder a los archivos multimedia
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Ruta absoluta a la carpeta 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
