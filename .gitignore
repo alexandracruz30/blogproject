@@ -1,3 +1,10 @@
 __pycache__/
 **/__pycache__/
 *.py[cod]
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Tailwind output
+blogproject/static/src/output.css
