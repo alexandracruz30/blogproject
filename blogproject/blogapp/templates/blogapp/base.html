@@ -1,25 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Configuración básica del documento -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog and Reviews</title>
+
+  <!-- Carga de archivos estáticos (como CSS de Tailwind) -->
   {% load static %}
   <link href="{% static 'src/output.css' %}" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body id="body" class="flex flex-col min-h-screen transition-all duration-700 ease-in-out">
+  
+    <!--  BARRA DE NAVEGACIÓN -->
   <nav class=" bg-[#2e1e45] shadow-md py-4 px-6 transition-colors">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
-      <a href="{% url 'blogapp:blog_list' %}" class="text-2xl font-semibold tracking-wider transition-colors text-[#ff695c] font-hitake">Zona Anime</a>
+            <a href="{% url 'blogapp:blog_list' %}" class="text-2xl font-semibold tracking-wider transition-colors text-[#ff695c] font-hitake">
+        Zona Anime
+      </a>
+      
+      <!-- Sección de botones de la derecha -->
       <div class="flex items-center space-x-4">
         {% if user.is_authenticated %}
-          <a href="{% url 'blogapp:add_blog' %}" class="bg-amber-700 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">New Blog</a>
+          <!--  BOTÓN: Crear nuevo blog (solo si el usuario está logueado) -->
+          <a href="{% url 'blogapp:add_blog' %}" class="bg-amber-700 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
+            New Blog
+          </a>
+
+          <!--  FORMULARIO DE CIERRE DE SESIÓN (logout) con método POST -->
+          <!-- Se reemplazó el enlace simple por un formulario seguro -->
+          <form method="post" action="{% url 'blogapp:logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-gray-700 dark:text-white hover:underline transition-colors">
+              Cerrar sesión
+            </button>
+          </form>
+        {% else %}
+          <!--  ENLACES para login y registro si el usuario NO está autenticado -->
+          <a href="{% url 'blogapp:login' %}" class="text-gray-700 dark:text-white hover:underline transition-colors">
+            Iniciar sesión
+          </a>
+          <a href="{% url 'blogapp:signup' %}" class="text-gray-700 dark:text-white hover:underline transition-colors">
+            Registrarse
+          </a>
+
         {% endif %}
       </div>
     </div>
   </nav>
+
   <main class="bg-[#2e1e45] flex-grow w-full transition-all duration-700 ease-in-out">
+          <!-- MENSAJES FLASH (mensajes de error, éxito, etc.) -->
+      {% if messages %}
+        <div class="container mx-auto mt-4">
+          {% for message in messages %}
+            <div class="p-4 mb-4 rounded-lg text-white 
+              {% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% else %}bg-blue-500{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
     {% block header_image %}{% comment %} Default header shows only on list view {% endcomment %}
     <div>
       <div class="flex items-center relative w-full">
@@ -38,14 +80,14 @@
       </div>
     </div>
     {% endblock header_image %}
-    
     <div class="md:max-w-4xl lg:max-w-7xl mx-auto px-5 py-8">
       {% block content %}{% endblock %}
     </div>
   </main>
 
+  <!-- Scripts JS si es necesario -->
   <script>
     //Cosas
-</script>
+  </script>
 </body>
 </html>
