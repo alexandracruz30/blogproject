@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+
+@font-face {
+  font-family: 'Hitake';
+  src: url('../assets/fonts/hitake-font/Hitake-YqK94.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@theme {
+  --font-hitake: "Hitake", "sans-serif";
+}
+
