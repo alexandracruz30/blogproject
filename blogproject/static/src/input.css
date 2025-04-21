@@ -1,5 +1,5 @@
 @import "tailwindcss";
-<<<<<<< HEAD
+
 
 @font-face {
   font-family: 'Hitake';
@@ -11,5 +11,3 @@
 @theme {
   --font-hitake: "Hitake", "sans-serif";
 }
-=======
->>>>>>> origin/dev
