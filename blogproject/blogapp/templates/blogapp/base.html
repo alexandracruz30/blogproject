@@ -20,15 +20,13 @@
     </div>
   </nav>
   <main class="bg-[#2e1e45] flex-grow w-full transition-all duration-700 ease-in-out">
+    {% block header_image %}{% comment %} Default header shows only on list view {% endcomment %}
     <div>
       <div class="flex items-center relative w-full">
-        <!-- Imagen principal -->
         <img src="{% static 'assets/images/wallpaper2.jpg' %}" class="w-full object-cover">
-        <!-- Texto sobre la imagen -->
-        <div class="text-white absolute flex flex-col items-center justify-center  inset-0">
-          <h2 class="text-7xl font-bold mb-2 text-center">Sumérgete en el universo del anime y manga</h2>
+        <div class="text-white absolute flex flex-col items-center justify-center inset-0">
+          <h2 class="text-7xl font-bold mb-2 text-center font-hitake">Sumérgete en el universo del anime y manga</h2>
           <div class="p-4 flex justify-between space-x-4">
-          <!-- Botones sobre la imagen -->
             <button class="flex-1 bg-[#ba3259] hover:bg-pink-950 text-white font-semibold py-1 px-6 rounded-xl transition">
               Ver Blogs
             </button>
@@ -39,8 +37,10 @@
         </div>
       </div>
     </div>
+    {% endblock header_image %}
+    
     <div class="md:max-w-4xl lg:max-w-7xl mx-auto px-5 py-8">
-    {% block content %}{% endblock %}
+      {% block content %}{% endblock %}
     </div>
   </main>
 
