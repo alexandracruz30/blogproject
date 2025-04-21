@@ -1,4 +1,3 @@
-npm install tailwindcss @tailwindcss/cli
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,16 +9,19 @@ npm install tailwindcss @tailwindcss/cli
   <!-- Carga de archivos estáticos (como CSS de Tailwind) -->
   {% load static %}
   <link href="{% static 'src/output.css' %}" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body id="body" class="flex flex-col min-h-screen transition-all duration-700 ease-in-out">
-  
-    <!--  BARRA DE NAVEGACIÓN -->
-  <nav class=" bg-[#2e1e45] shadow-md py-4 px-6 transition-colors">
+
+  <!--  BARRA DE NAVEGACIÓN -->
+  <nav class="bg-white dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-700 shadow-md py-4 px-6 transition-colors">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="{% url 'blogapp:blog_list' %}" class="text-2xl font-semibold tracking-wider transition-colors text-[#ff695c] font-hitake">
-        Zona Anime
+
+      <!-- Logo con enlace a la lista de blogs -->
+      <a href="{% url 'blogapp:blog_list' %}" class="text-gray-900 dark:text-white text-2xl font-semibold tracking-wider transition-colors">
+        BlogSpace
       </a>
-      
+
       <!-- Sección de botones de la derecha -->
       <div class="flex items-center space-x-4">
         {% if user.is_authenticated %}
@@ -44,14 +46,17 @@ npm install tailwindcss @tailwindcss/cli
           <a href="{% url 'blogapp:signup' %}" class="text-gray-700 dark:text-white hover:underline transition-colors">
             Registrarse
           </a>
-
         {% endif %}
       </div>
     </div>
   </nav>
+<<<<<<<<< Temporary merge branch 1
 
-  <main class="bg-[#2e1e45] flex-grow w-full transition-all duration-700 ease-in-out">
-          <!-- MENSAJES FLASH (mensajes de error, éxito, etc.) -->
+  <!--  CONTENIDO PRINCIPAL -->
+  <main class="flex-grow w-full bg-white dark:bg-gray-900 transition-all duration-700 ease-in-out">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+
+      <!-- MENSAJES FLASH (mensajes de error, éxito, etc.) -->
       {% if messages %}
         <div class="container mx-auto mt-4">
           {% for message in messages %}
@@ -62,6 +67,10 @@ npm install tailwindcss @tailwindcss/cli
           {% endfor %}
         </div>
       {% endif %}
+
+      <!-- BLOQUE DE CONTENIDO (aquí se inyectan las plantillas hijas) -->
+=========
+  <main class="bg-[#2e1e45] flex-grow w-full transition-all duration-700 ease-in-out">
     {% block header_image %}{% comment %} Default header shows only on list view {% endcomment %}
     <div>
       <div class="flex items-center relative w-full">
@@ -80,7 +89,9 @@ npm install tailwindcss @tailwindcss/cli
       </div>
     </div>
     {% endblock header_image %}
+    
     <div class="md:max-w-4xl lg:max-w-7xl mx-auto px-5 py-8">
+>>>>>>>>> Temporary merge branch 2
       {% block content %}{% endblock %}
     </div>
   </main>
