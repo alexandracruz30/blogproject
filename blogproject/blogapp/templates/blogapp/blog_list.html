@@ -1,16 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1 class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">All Blogs</h1>
-  <div class="grid gap-6">
+  <h1 class="text-3xl font-bold mb-6 text-center text-white">Ultimos blogs</h1>
+  <p class="text-white text-2xl text-center">Enterate de las últimas noticias sobre el anime y manga. Animate a escribir tus propias opiniones al respecto!</p>
+  <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
+    <!-- Espacio para los blogs -->
     {% for blog in object_list %}
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
+    <!-- Forma en la que apareceran los blogs -->
+      <div class="bg-[#612a52] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col">
+        <!-- Interior de los blogs -->
+
+        <!-- Imagen del blog (Si aplica) -->
+        #todo: Terminar esto cuando la logica de imagenes este lista
+        {% if blog.image %}
+          <div class="mb-4 aspect-video rounded-lg overflow-hidden">
+            <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover">
+          </div>
+        {% endif %}
+
+        <!-- Titulo -->
         <h2 class="text-xl font-semibold mb-2">
-          <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-blue-400 hover:text-blue-300">{{ blog.title }}</a>
+          <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-[#ff695c] hover:text-[#b84d44]">{{ blog.title }}</a>
         </h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">by {{ blog.author.username }} - {{ blog.created_at }}</p>
+        <!-- Descripcion -->
+        <div class="relative mb-4 max-h-[6em] overflow-hidden">
+          <p class="text-gray-300 [mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent]">
+            {{ blog.content }}
+          </p>
+        </div>
+        <!-- Autor y fecha -->
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">by {{ blog.author.username }} - {{ blog.created_at }}</p>
       </div>
     {% empty %}
-      <p class="text-gray-500 dark:text-gray-400 text-center">No blogs have been posted yet.</p>
+      <p class="text-gray-500 dark:text-gray-400 text-center">No hay nada por aqui...</p>
     {% endfor %}
   </div>
 {% endblock %}
