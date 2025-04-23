@@ -1,5 +1,12 @@
 {% extends 'base.html' %}  {# Usa la plantilla base.html como estructura principal #}
 
+
+{% block header_image %}
+  {% with show_header_image=True %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock header_image %}
+
 {% block content %}
 
   <h1 class="text-3xl font-bold mb-6 text-center text-white">Ultimos blogs</h1>
