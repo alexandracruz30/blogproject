@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}  {# Usa la plantilla base.html como estructura principal #}
 
 {% block header_image %}
@@ -51,12 +52,11 @@
         </h2>
 
         <!-- Descripción -->
-        <div class="relative mb-4 max-h-[6em] overflow-hidden">
-          <!-- Usamos el filtro 'safe' para renderizar el HTML del contenido -->
-          <p class="text-gray-300 [mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent]">
-            {{ blog.content|safe }}
-          </p>
-        </div>
+      <div class="relative mb-4 max-h-[6em] overflow-hidden">
+        <p class="text-gray-300 [mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent]">
+          {{ blog.content|safe }}
+        </p>
+      </div>
 
         <!-- Autor y fecha -->
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">by {{ blog.author.username }} - {{ blog.created_at }}</p>
