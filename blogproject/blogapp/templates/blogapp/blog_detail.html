@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block main_classes %}{% comment %} establecer fondo de la reviews {% endcomment %}
+{% block main_classes %}
+  {% comment %} establecer fondo de la reviews {% endcomment %}
   bg-[url('{% static "assets/images/fond1.jpg" %}')] bg-cover bg-center
 {% endblock %}
 
@@ -9,10 +10,16 @@
 
   <div class="relative bg-cover bg-center" style="background-image: url('{% static "assets/images/fond1.jpg" %}'); opacity: 0.7;">
     <div class="bg-[#612A52]/90 dark:bg-gray-900/90 p-6 rounded-lg shadow-lg transition-all duration-700 ease-in-out dark:text-white text-gray-900 animate-fade-in">
+      
       <article>
         <h1 class="text-3xl font-bold mb-2">{{ object.title }}</h1>
         <p class="text-gray-700 dark:text-gray-300 mb-4">{{ object.content }}</p>
         <p class="text-sm text-gray-600 dark:text-gray-500">By {{ object.author.username }} - {{ object.created_at }}</p>
+        
+        {% if object.image %}
+          <!-- Imagen del blog -->
+          <img src="{{ object.image.url }}" alt="{{ object.title }}" class="w-full h-auto rounded-xl mb-4">
+        {% endif %}
       </article>
 
       <section class="mt-8">
