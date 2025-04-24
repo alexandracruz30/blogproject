@@ -69,24 +69,17 @@ class BlogDetailView(DetailView):
 
 
 class BlogCreateView(LoginRequiredMixin, CreateView):
-    """Vista para crear nuevos blogs (requiere autenticación).
-    """
     model = Blog
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'image']  # Incluye el campo de imagen
     template_name = 'blog_form.html'
 
     def form_valid(self, form):
-        """Asigna el usuario actual como autor del blog antes de guardar.
-        """
         form.instance.author = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
-        """Obtiene la URL para redirigir tras crear el blog exitosamente.
-        """
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.object.pk})
-
-
+    
 class ReviewCreateView(CreateView):
     """Vista para crear reseñas sobre blogs (requiere autenticación).
     """
