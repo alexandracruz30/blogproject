@@ -9,12 +9,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models import Avg
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 # MODELOS
 class Blog(models.Model):
     title = models.CharField(max_length=200)
-    content = models.TextField()
+    content = RichTextUploadingField()
     image = models.ImageField(upload_to='blog_images/', null=True, blank=True)  # Campo para imágenes
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
