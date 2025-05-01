@@ -17,6 +17,16 @@
         <p class="text-gray-700 dark:text-gray-300 mb-4">{{ object.content|safe }}</p>
         <p class="text-sm text-gray-600 dark:text-gray-500">By {{ object.author.username }} - {{ object.created_at }}</p>
         
+        <!-- Mostrar el promedio de puntuación -->
+        <p class="text-lg mt-2 text-gray-800 dark:text-gray-200 font-semibold">
+          Promedio de puntuación: 
+          {% if average_rating %}
+            {{ average_rating|floatformat:1 }} / 5 ⭐
+          {% else %}
+            No hay puntuaciones aún
+          {% endif %}
+        </p>
+        
         {% if object.image %}
           <!-- Imagen del blog -->
           <img src="{{ object.image.url }}" alt="{{ object.title }}" class="w-full h-auto rounded-xl mb-4">

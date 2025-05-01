@@ -13,7 +13,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 from .models import Blog, Review, Comment
-
+from django import forms  # Import necesario para personalizar widgets
+from django.db.models import Avg
 
 class SignUpView(FormView):
     """Vista para el registro de usuarios en el sistema.
@@ -55,19 +56,26 @@ class UserLogoutView(LogoutView):
 
 
 class BlogListView(ListView):
-    """Vista para listar todos los blogs disponibles.
-    """
+    """Vista para listar todos los blogs disponibles."""
     model = Blog
     template_name = 'blogapp/blog_list.html'
+    context_object_name = 'blogs'
 
+    def get_queryset(self):
+        # Incluye el promedio en el queryset
+        return Blog.objects.annotate(average_rating=Avg('reviews__rating'))  # pylint: disable=no-member
 
 class BlogDetailView(DetailView):
-    """Vista para mostrar los detalles de un blog específico.
-    """
+    """Vista para mostrar los detalles de un blog específico."""
     model = Blog
     template_name = 'blogapp/blog_detail.html'
+    context_object_name = 'blog'
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['average_rating'] = self.object.average_rating()  # Calcula el promedio
+        return context
+    
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     fields = ['title', 'content', 'image']  # Incluye el campo de imagen
@@ -79,35 +87,52 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.object.pk})
-    
+
+#Implementación para control de una review por usuario 
 class ReviewCreateView(CreateView):
-    """Vista para crear reseñas sobre blogs (requiere autenticación).
-    """
+    """Vista para crear reseñas sobre blogs (requiere autenticación)."""
     model = Review
-    fields = ['rating', 'comment']
+    fields = ['rating', 'comment']  # Campos mostrados en el formulario
     template_name = 'blogapp/review_form.html'
 
+    def get_form(self, form_class=None):
+        """Personaliza el formulario generado automáticamente."""
+        form = super().get_form(form_class)
+        form.fields['rating'].widget = forms.NumberInput(attrs={
+            'min': 1,                 # Valor mínimo permitido
+            'max': 5,                 # Valor máximo permitido
+            'step': 1,                # Incremento del spinner
+           # 'class': 'form-control',  # Clase CSS para estilos GENTE ACÁ DUDA DE COMO SE EDITARÁ ESE CAMPO
+            #ADEMÁS SALE MAL LA ESCALA SALE:  O IGUAL A 5
+        })
+        return form
+
     def dispatch(self, request, *args, **kwargs):
-        """Verifica autenticación antes de procesar la solicitud.
-        """
+        """Verifica autenticación antes de procesar la solicitud."""
         if not request.user.is_authenticated:
             messages.error(request, "Debes iniciar sesión para agregar una reseña.")
             return redirect(f"{reverse('blogapp:login')}?next={request.path}")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        """Asigna el usuario actual y el blog asociado antes de guardar la reseña.
-        """
-        form.instance.reviewer = self.request.user
-        form.instance.blog_id = self.kwargs['pk']
+        """Valida que el usuario no haya enviado una reseña previa y guarda la nueva reseña."""
+        user = self.request.user
+        blog_id = self.kwargs['pk']
+
+        # Validar si ya existe una reseña del usuario para este blog
+        if Review.objects.filter(blog_id=blog_id, reviewer=user).exists():  # pylint: disable=no-member
+            messages.error(self.request, "Ya has enviado una reseña para este blog.")
+            return redirect(reverse('blogapp:blog_detail', kwargs={'pk': blog_id}))
+
+        # Asigna el usuario actual y el blog asociado antes de guardar la reseña
+        form.instance.reviewer = user
+        form.instance.blog_id = blog_id
         return super().form_valid(form)
 
     def get_success_url(self):
-        """Obtiene la URL para redirigir tras crear la reseña exitosamente.
-        """
+        """Obtiene la URL para redirigir tras crear la reseña exitosamente."""
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.kwargs['pk']})
-
-
+    
 class CommentCreateView(CreateView):
     """Vista para crear comentarios sobre reseñas (requiere autenticación).
     """

@@ -58,6 +58,16 @@
         </p>
       </div>
 
+        <!-- Promedio de puntuación -->
+        <p class="text-sm text-gray-400 mb-2">
+          <strong>Puntuación promedio: </strong> 
+          {% if blog.average_rating %}
+            {{ blog.average_rating|floatformat:1 }} / 5 ⭐
+          {% else %}
+            No hay puntuaciones aún
+          {% endif %}
+        </p>
+
         <!-- Autor y fecha -->
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">by {{ blog.author.username }} - {{ blog.created_at }}</p>
       </div>
