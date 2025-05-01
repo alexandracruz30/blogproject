@@ -17,6 +17,23 @@
         <p class="text-gray-700 dark:text-gray-300 mb-4">{{ object.content|safe }}</p>
         <p class="text-sm text-gray-600 dark:text-gray-500">By {{ object.author.username }} - {{ object.created_at }}</p>
         
+        <!-- Mostrar categoría -->
+        {% if object.category %}
+        <p class="text-sm text-gray-500">Categoría: 
+          <a href="{% url 'blogapp:blogs_by_category' object.category.slug %}" class="text-blue-500 hover:underline">
+            {{ object.category.name }}
+          </a>
+        </p>
+      {% endif %}
+
+      <!-- Mostrar etiquetas -->
+      <p class="text-sm text-gray-500">Etiquetas: 
+        {% for tag in object.tags.all %}
+          <a href="{% url 'blogapp:blogs_by_tag' tag.slug %}" class="text-blue-500 hover:underline">
+            {{ tag.name }}
+          </a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
         <!-- Mostrar el promedio de puntuación -->
         <p class="text-lg mt-2 text-gray-800 dark:text-gray-200 font-semibold">
           Promedio de puntuación: 

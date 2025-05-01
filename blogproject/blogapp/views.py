@@ -12,7 +12,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
-from .models import Blog, Review, Comment
+from .models import Blog, Review, Comment, Category, Tag
 from django import forms  # Import necesario para personalizar widgets
 from django.db.models import Avg
 
@@ -54,16 +54,28 @@ class UserLogoutView(LogoutView):
     """
     next_page = 'blogapp:blog_list'
 
-
 class BlogListView(ListView):
     """Vista para listar todos los blogs disponibles."""
     model = Blog
     template_name = 'blogapp/blog_list.html'
     context_object_name = 'blogs'
+    paginate_by = 3  # Paginación: 10 blogs por página
 
     def get_queryset(self):
-        # Incluye el promedio en el queryset
-        return Blog.objects.annotate(average_rating=Avg('reviews__rating'))  # pylint: disable=no-member
+        queryset = Blog.objects.annotate(average_rating=Avg('reviews__rating'))  # pylint: disable=no-member
+        category_slug = self.kwargs.get('category_slug')
+        tag_slug = self.kwargs.get('tag_slug')
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
+        if tag_slug:
+            queryset = queryset.filter(tags__slug=tag_slug)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # pylint: disable=no-member
+        context['tags'] = Tag.objects.all()  # pylint: disable=no-member
+        return context
 
 class BlogDetailView(DetailView):
     """Vista para mostrar los detalles de un blog específico."""
@@ -75,19 +87,39 @@ class BlogDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['average_rating'] = self.object.average_rating()  # Calcula el promedio
         return context
-    
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
-    fields = ['title', 'content', 'image']  # Incluye el campo de imagen
+    fields = ['title', 'content', 'image']  # Excluye 'category' y 'tags' porque se manejarán manualmente
     template_name = 'blog_form.html'
 
     def form_valid(self, form):
+        # Asignar el autor del blog
         form.instance.author = self.request.user
+
+        # Procesar categoría
+        category_name = self.request.POST.get('category')
+        if category_name:
+            # Crear o recuperar la categoría ingresada
+            category, _ = Category.objects.get_or_create(name=category_name.strip())  # pylint: disable=no-member
+            form.instance.category = category
+
+        # Procesar etiquetas
+        tags_input = self.request.POST.get('tags')
+        if tags_input:
+            tag_names = [tag.strip() for tag in tags_input.split(',')]
+            tags = []
+            for tag_name in tag_names:
+                # Crear o recuperar cada etiqueta ingresada
+                tag, _ = Tag.objects.get_or_create(name=tag_name)  # pylint: disable=no-member
+                tags.append(tag)
+            form.instance.save()  # Guarda el blog primero para agregar las etiquetas
+            form.instance.tags.set(tags)
+
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.object.pk})
-
+    
 #Implementación para control de una review por usuario 
 class ReviewCreateView(CreateView):
     """Vista para crear reseñas sobre blogs (requiere autenticación)."""
@@ -102,8 +134,6 @@ class ReviewCreateView(CreateView):
             'min': 1,                 # Valor mínimo permitido
             'max': 5,                 # Valor máximo permitido
             'step': 1,                # Incremento del spinner
-           # 'class': 'form-control',  # Clase CSS para estilos GENTE ACÁ DUDA DE COMO SE EDITARÁ ESE CAMPO
-            #ADEMÁS SALE MAL LA ESCALA SALE:  O IGUAL A 5
         })
         return form
 
