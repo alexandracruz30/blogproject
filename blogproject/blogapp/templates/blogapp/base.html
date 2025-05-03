@@ -80,10 +80,11 @@
         <div class="text-white absolute flex flex-col items-center justify-center inset-0">
           <h2 class="text-7xl font-bold mb-2 text-center font-hitake">Sumérgete en el universo del anime y manga</h2>
           <div class="p-4 flex justify-between space-x-4">
-            <a href="#" class="text-white bg-[#ba3259] hover:bg-pink-950 font-medium py-2 px-4 rounded-xl transition-all duration-500 ease-in-out text-center">
+            <button onclick="document.getElementById('blog_list').scrollIntoView({ behavior: 'smooth' });"
+            class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
               Ver Blogs
-            </a>
-            <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 font-medium py-2 px-4 rounded-xl transition-all duration-500 ease-in-out text-center">
+            </button>
+            <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
               Nuevo Blog
             </a>
           </div>
