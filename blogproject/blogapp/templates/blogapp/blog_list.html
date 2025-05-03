@@ -20,9 +20,6 @@
     </p>
     <form method="post" action="{% url 'blogapp:logout' %}" class="inline">  {# Formulario para cerrar sesión #}
       {% csrf_token %}  {# Token CSRF obligatorio #}
-      <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-        Cerrar sesión  {# Botón para salir de la cuenta #}
-      </button>
     </form>
 
   {% else %}  {# Si el usuario no está autenticado #}
