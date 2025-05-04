@@ -1,6 +1,5 @@
 {% extends 'base.html' %}  {# Usa la plantilla base.html como estructura principal #}
 
-
 {% block header_image %}
   {% with show_header_image=True %}
     {{ block.super }}
@@ -9,8 +8,37 @@
 
 {% block content %}
 
-  <h1 class="text-3xl font-bold mb-6 text-center text-white">Ultimos blogs</h1>
-  <p class="text-white text-2xl text-center">Enterate de las últimas noticias sobre el anime y manga. Animate a escribir tus propias opiniones al respecto!</p>
+  <h1 class="text-3xl font-bold mb-6 text-center text-white">Últimos blogs</h1>
+  <p class="text-white text-2xl text-center">Entérate de las últimas noticias sobre el anime y manga. ¡Anímate a escribir tus propias opiniones al respecto!</p>
+
+  <!-- Categorías -->
+  <div class="mt-8 mb-4">
+    <h2 class="text-xl font-semibold text-white">Categorías</h2>
+    <ul class="flex flex-wrap gap-4 mt-2">
+      {% for category in categories %}
+        <li>
+          <a href="{% url 'blogapp:blogs_by_category' category.slug %}" class="text-blue-400 hover:underline">
+            {{ category.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Etiquetas -->
+  <div class="mb-10">
+    <h2 class="text-xl font-semibold text-white">Etiquetas</h2>
+    <ul class="flex flex-wrap gap-4 mt-2">
+      {% for tag in tags %}
+        <li>
+          <a href="{% url 'blogapp:blogs_by_tag' tag.slug %}" class="text-green-400 hover:underline">
+            {{ tag.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
   <!-- Barra de navegación / Encabezado -->
   <div class="flex justify-between items-center mb-8">
 
@@ -20,6 +48,9 @@
     </p>
     <form method="post" action="{% url 'blogapp:logout' %}" class="inline">  {# Formulario para cerrar sesión #}
       {% csrf_token %}  {# Token CSRF obligatorio #}
+      <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+        Cerrar sesión  {# Botón para salir de la cuenta #}
+      </button>
     </form>
 
   {% else %}  {# Si el usuario no está autenticado #}
@@ -31,36 +62,62 @@
     </p>
   {% endif %}
 </div>
-<div id='blog_list' class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
+<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
     <!-- Espacio para los blogs -->
     {% for blog in object_list %}
-    <!-- Forma en la que apareceran los blogs -->
+      <!-- Forma en la que aparecerán los blogs -->
       <div class="bg-[#612a52] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col">
-        <!-- Interior de los blogs -->
-
+        
         <!-- Imagen del blog (Si aplica) -->
-        #todo: Terminar esto cuando la logica de imagenes este lista
         {% if blog.image %}
           <div class="mb-4 aspect-video rounded-lg overflow-hidden">
             <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover">
           </div>
         {% endif %}
 
-        <!-- Titulo -->
+        <!-- Título -->
         <h2 class="text-xl font-semibold mb-2">
           <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-[#ff695c] hover:text-[#b84d44]">{{ blog.title }}</a>
         </h2>
-        <!-- Descripcion -->
+
+        <!-- Descripción recortada -->
         <div class="relative mb-4 max-h-[6em] overflow-hidden">
           <p class="text-gray-300 [mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent]">
-            {{ blog.content }}
+            {{ blog.content|safe }}
           </p>
         </div>
+
+        <!-- Promedio de puntuación -->
+        <p class="text-sm text-gray-400 mb-2">
+          <strong>Puntuación promedio: </strong> 
+          {% if blog.average_rating %}
+            {{ blog.average_rating|floatformat:1 }} / 5 ⭐
+          {% else %}
+            No hay puntuaciones aún
+          {% endif %}
+        </p>
+
         <!-- Autor y fecha -->
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">by {{ blog.author.username }} - {{ blog.created_at }}</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">
+          by {{ blog.author.username }} - {{ blog.created_at }}
+        </p>
       </div>
     {% empty %}
-      <p class="text-gray-500 dark:text-gray-400 text-center">No hay nada por aqui...</p>
+      <p class="text-gray-500 dark:text-gray-400 text-center">No hay nada por aquí...</p>
     {% endfor %}
   </div>
+
+  <!-- Paginación -->
+  {% if is_paginated %}
+    <div class="mt-8 flex justify-center items-center gap-4 text-white">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="hover:underline">&laquo; Anterior</a>
+      {% endif %}
+      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="hover:underline">Siguiente &raquo;</a>
+      {% endif %}
+    </div>
+  {% endif %}
+
 {% endblock %}
