@@ -38,35 +38,12 @@
       {% endfor %}
     </ul>
   </div>
-
-  <!-- Barra de navegación / Encabezado -->
-  <div class="flex justify-between items-center mb-8">
-
-  {% if user.is_authenticated %}  {# Si el usuario ha iniciado sesión #}
-    <p class="text-lg text-gray-700 dark:text-gray-300">
-      Bienvenido, <span class="font-semibold">{{ user.username }}</span>!  {# Muestra el nombre de usuario #}
-    </p>
-    <form method="post" action="{% url 'blogapp:logout' %}" class="inline">  {# Formulario para cerrar sesión #}
-      {% csrf_token %}  {# Token CSRF obligatorio #}
-      <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-        Cerrar sesión  {# Botón para salir de la cuenta #}
-      </button>
-    </form>
-
-  {% else %}  {# Si el usuario no está autenticado #}
-    <p class="text-lg text-gray-700 dark:text-gray-300">
-      ¿Nuevo aquí? 
-      <a href="{% url 'blogapp:signup' %}" class="text-blue-500 hover:underline">Regístrate</a> o 
-      <a href="{% url 'blogapp:login' %}" class="text-blue-500 hover:underline">Inicia sesión</a> para unirte.
-      {# Enlaces para registrarse o iniciar sesión #}
-    </p>
-  {% endif %}
 </div>
-<div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
+<div id='blog_list' class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
     <!-- Espacio para los blogs -->
     {% for blog in object_list %}
       <!-- Forma en la que aparecerán los blogs -->
-      <div class="bg-[#612a52] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col">
+      <div class="bg-[#160c24] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col">
         
         <!-- Imagen del blog (Si aplica) -->
         {% if blog.image %}
