@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'blogapp',
     'widget_tweaks',
     'ckeditor',
-    'ckeditor_uploader',  
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +154,10 @@ LOGOUT_REDIRECT_URL = 'blogapp:blog_list'  # Redirige aquí después de cerrar s
 
 # URL a la que se redirige a los usuarios no autenticados
 #LOGIN_URL = '/login/'
+
+
+# Ajustes de UI JAZZMIN
+JAZZMIN_UI_TWEAKS = {
+    "theme": "darkly",
+    "navbar": "navbar-dark",
+}
