@@ -24,8 +24,8 @@
       <div class="flex items-center space-x-4">
         {% if user.is_authenticated %}
           <!--  BOTÓN: Crear nuevo blog (solo si el usuario está logueado) -->
-          <a href="{% url 'blogapp:add_blog' %}" class="bg-amber-700 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
-            New Blog
+          <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
+            Nuevo Blog
           </a>
 
           <!--  FORMULARIO DE CIERRE DE SESIÓN (logout) con método POST -->
@@ -80,12 +80,13 @@
         <div class="text-white absolute flex flex-col items-center justify-center inset-0">
           <h2 class="text-7xl font-bold mb-2 text-center font-hitake">Sumérgete en el universo del anime y manga</h2>
           <div class="p-4 flex justify-between space-x-4">
-            <button class="flex-1 bg-[#ba3259] hover:bg-pink-950 text-white font-semibold py-1 px-6 rounded-xl transition">
+            <button onclick="document.getElementById('blog_list').scrollIntoView({ behavior: 'smooth' });"
+            class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
               Ver Blogs
             </button>
-            <button class="flex-1 bg-[#ba3259] hover:bg-pink-950 text-white font-semibold py-1 px-6 rounded-xl transition">
-              Escribir Blog
-            </button>
+            <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
+              Nuevo Blog
+            </a>
           </div>
         </div>
       </div>
