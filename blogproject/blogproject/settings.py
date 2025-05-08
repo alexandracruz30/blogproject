@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'blogapp',
     'widget_tweaks',
     'ckeditor',
-    'ckeditor_uploader',  
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [

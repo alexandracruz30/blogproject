@@ -1,26 +1,70 @@
+"""
+Este módulo define los modelos de la aplicación BlogApp, incluyendo:
+- Blog: Representa un artículo de blog.
+- Review: Representa una reseña de un blog.
+- Comment: Representa un comentario en una reseña.
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Avg
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.utils.text import slugify
 
 
+class Category(models.Model):
+        name = models.CharField(max_length=100, unique=True)
+        slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+        def save(self, *args, **kwargs):
+            if not self.slug:
+             base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Category.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+            super().save(*args, **kwargs)
+
+        def __str__(self):
+            return str(self.name)
+
+class Tag(models.Model):
+        name = models.CharField(max_length=100, unique=True)
+        slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+        def save(self, *args, **kwargs):
+            if not self.slug:
+             base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Tag.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+            super().save(*args, **kwargs)
+
+        def __str__(self):
+         return str(self.name)
 
 # MODELOS
-
 class Blog(models.Model):
     title = models.CharField(max_length=200)
     content = RichTextUploadingField()
+    image = models.ImageField(upload_to='blog_images/', null=True, blank=True)  # Campo para imágenes
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(
-        upload_to='blogs/',  # Las imágenes se guardarán en `/media/blogs/`
-        blank=True,         # Permite posts sin imagen
-        null=True           # Permite NULL en la base de datos
-    )
-
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="blogs")
+    tags = models.ManyToManyField(Tag, blank=True, related_name="blogs")
+   
     def __str__(self):
-        return self.title
-
+        return str(self.title)  # Asegura que devuelve una cadena
+    
+    def average_rating(self):
+        """Calcula el promedio de las calificaciones de las reseñas asociadas al blog."""
+        return self.reviews.aggregate(Avg('rating'))['rating__avg'] or 0  # pylint: disable=no-member
 
 class Review(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='reviews')
@@ -30,7 +74,7 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.reviewer.username} - {self.blog.title}"
+        return f"{self.reviewer.username} - {self.blog.title}"  # pylint: disable=no-member
 
 
 
@@ -41,4 +85,4 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Comment by {self.commenter.username}"
+        return f"Comment by {self.commenter.username}"  # pylint: disable=no-member

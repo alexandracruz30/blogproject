@@ -27,6 +27,11 @@
           <a href="{% url 'blogapp:add_blog' %}" class="bg-amber-700 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
             New Blog
           </a>
+         
+          <a href="{% url 'blogapp:blog_stats' %}" class="bg-green-700 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition-all duration-300">
+            📊 Estadísticas
+          </a>
+          
 
           <!--  FORMULARIO DE CIERRE DE SESIÓN (logout) con método POST -->
           <!-- Se reemplazó el enlace simple por un formulario seguro -->
@@ -50,8 +55,18 @@
     </div>
   </nav>
 
-  <main class="bg-[#2e1e45] flex-grow w-full transition-all duration-700 ease-in-out">
-          <!-- MENSAJES FLASH (mensajes de error, éxito, etc.) -->
+  {% comment %} no se vea el mismo color en las hijas <!-- MENSAJES FLASH (mensajes de error, éxito, etc.) --> {% endcomment %}
+  {% if messages %}
+    <div class="container mx-auto mt-4">
+      {% for message in messages %}
+        <div class="p-4 mb-4 rounded-lg text-white 
+          {% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% else %}bg-blue-500{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <main class="{% block main_classes %}bg-[#2e1e45]{% endblock %} flex-grow w-full transition-all duration-700 ease-in-out"><!-- MENSAJES FLASH (mensajes de error, éxito, etc.) -->
       {% if messages %}
         <div class="container mx-auto mt-4">
           {% for message in messages %}
@@ -63,6 +78,7 @@
         </div>
       {% endif %}
     {% block header_image %}{% comment %} Default header shows only on list view {% endcomment %}
+    {% if show_header_image %}
     <div>
       <div class="flex items-center relative w-full">
         <img src="{% static 'assets/images/wallpaper2.jpg' %}" class="w-full object-cover">
@@ -79,6 +95,7 @@
         </div>
       </div>
     </div>
+  {% endif %}
     {% endblock header_image %}
     <div class="md:max-w-4xl lg:max-w-7xl mx-auto px-5 py-8">
       {% block content %}{% endblock %}
