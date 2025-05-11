@@ -13,23 +13,24 @@
 </head>
 <body id="body" class="flex flex-col min-h-screen transition-all duration-700 ease-in-out">
   
-    <!--  BARRA DE NAVEGACIÓN -->
-  <nav class=" bg-[#2e1e45] shadow-md py-4 px-6 transition-colors">
+  <!-- BARRA DE NAVEGACIÓN -->
+  <nav class="bg-[#2e1e45] shadow-md py-4 px-6 transition-colors">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="{% url 'blogapp:blog_list' %}" class="text-2xl font-semibold tracking-wider transition-colors text-[#ff695c] font-hitake">
+      <a href="{% url 'blogapp:blog_list' %}" class="text-2xl font-semibold tracking-wider transition-colors text-[#ff695c] font-hitake">
         Zona Anime
       </a>
-      
+
       <!-- Sección de botones de la derecha -->
       <div class="flex items-center space-x-4">
         {% if user.is_authenticated %}
-          <!--  BOTÓN: Crear nuevo blog (solo si el usuario está logueado) -->
+         <!--  BOTÓN: Crear nuevo blog (solo si el usuario está logueado) -->
           <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
             Nuevo Blog
           </a>
-
+          
           <!--  FORMULARIO DE CIERRE DE SESIÓN (logout) con método POST -->
           <!-- Se reemplazó el enlace simple por un formulario seguro -->
+          <!--  para evitar ataques CSRF y asegurar que el cierre de sesión sea seguro. -->
           <form method="post" action="{% url 'blogapp:logout' %}" class="inline">
             {% csrf_token %}
             <button type="submit" class="text-gray-700 dark:text-white hover:underline transition-colors">
@@ -37,14 +38,13 @@
             </button>
           </form>
         {% else %}
-          <!--  ENLACES para login y registro si el usuario NO está autenticado -->
+         <!--  ENLACES para login y registro si el usuario NO está autenticado -->
           <a href="{% url 'blogapp:login' %}" class="text-gray-700 dark:text-white hover:underline transition-colors">
             Iniciar sesión
           </a>
           <a href="{% url 'blogapp:signup' %}" class="text-gray-700 dark:text-white hover:underline transition-colors">
             Registrarse
           </a>
-
         {% endif %}
       </div>
     </div>
@@ -61,18 +61,20 @@
       {% endfor %}
     </div>
   {% endif %}
-  <main class="{% block main_classes %}bg-[#2e1e45]{% endblock %} flex-grow w-full transition-all duration-700 ease-in-out"><!-- MENSAJES FLASH (mensajes de error, éxito, etc.) -->
-      {% if messages %}
-        <div class="container mx-auto mt-4">
-          {% for message in messages %}
-            <div class="p-4 mb-4 rounded-lg text-white 
-              {% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% else %}bg-blue-500{% endif %}">
-              {{ message }}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% block header_image %}{% comment %} Default header shows only on list view {% endcomment %}
+
+  <main class="{% block main_classes %}bg-[#2e1e45]{% endblock %} flex-grow w-full transition-all duration-700 ease-in-out">
+    {% if messages %}
+      <div class="container mx-auto mt-4">
+        {% for message in messages %}
+          <div class="p-4 mb-4 rounded-lg text-white 
+            {% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% else %}bg-blue-500{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block header_image %}
     {% if show_header_image %}
     <div>
       <div class="flex items-center relative w-full">
@@ -81,7 +83,7 @@
           <h2 class="text-7xl font-bold mb-2 text-center font-hitake">Sumérgete en el universo del anime y manga</h2>
           <div class="p-4 flex justify-between space-x-4">
             <button onclick="document.getElementById('blog_list').scrollIntoView({ behavior: 'smooth' });"
-            class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
+              class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
               Ver Blogs
             </button>
             <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
@@ -91,12 +93,24 @@
         </div>
       </div>
     </div>
-  {% endif %}
+    {% endif %}
     {% endblock header_image %}
-    <div class="md:max-w-4xl lg:max-w-7xl mx-auto px-5 py-8">
-      {% block content %}{% endblock %}
-    </div>
-  </main>
+
+    <!-- Botón de retorno (solo si NO es la vista de inicio) -->
+{% if request.resolver_match.view_name != 'blogapp:blog_list' %}
+<div class="md:max-w-4xl lg:max-w-7xl mx-auto px-5 py-2">
+  <a href="javascript:history.back()" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-200">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+    Volver
+  </a>
+</div>
+{% endif %}
+
+<div class="md:max-w-4xl lg:max-w-7xl mx-auto px-5 py-8">
+  {% block content %}{% endblock %}
+</div>
 
   <!-- Scripts JS si es necesario -->
   <script>
