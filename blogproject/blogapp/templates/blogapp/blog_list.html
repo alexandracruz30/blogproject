@@ -39,50 +39,50 @@
     </ul>
   </div>
 </div>
-<div id='blog_list' class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
-    <!-- Espacio para los blogs -->
-    {% for blog in object_list %}
-      <!-- Forma en la que aparecerán los blogs -->
-      <div class="bg-[#160c24] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col">
-        
-        <!-- Imagen del blog (Si aplica) -->
-        {% if blog.image %}
-          <div class="mb-4 aspect-video rounded-lg overflow-hidden">
-            <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover">
-          </div>
-        {% endif %}
-
-        <!-- Título -->
-        <h2 class="text-xl font-semibold mb-2">
-          <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-[#ff695c] hover:text-[#b84d44]">{{ blog.title }}</a>
-        </h2>
-
-        <!-- Descripción recortada -->
-        <div class="relative mb-4 max-h-[6em] overflow-hidden">
-          <p class="text-gray-300 [mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent]">
-            {{ blog.content|safe }}
-          </p>
+<div id="blog_list" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pb-3 mx-10">
+  <!-- Espacio para los blogs -->
+  {% for blog in object_list %}
+    <!-- Contenedor del blog como enlace clickeable -->
+    <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="bg-[#160c24] rounded-lg shadow-lg p-6 hover:shadow-xl transition-transform duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col hover:scale-105">
+      
+      <!-- Imagen del blog (Si aplica) -->
+      {% if blog.image %}
+        <div class="mb-4 aspect-video rounded-lg overflow-hidden">
+          <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover">
         </div>
+      {% endif %}
 
-        <!-- Promedio de puntuación -->
-        <p class="text-sm text-gray-400 mb-2">
-          <strong>Puntuación promedio: </strong> 
-          {% if blog.average_rating %}
-            {{ blog.average_rating|floatformat:1 }} / 5 ⭐
-          {% else %}
-            No hay puntuaciones aún
-          {% endif %}
-        </p>
+      <!-- Título -->
+      <h2 class="text-xl font-semibold mb-2 font-hitake text-[#ff695c] hover:text-[#b84d44]">
+        {{ blog.title }}
+      </h2>
 
-        <!-- Autor y fecha -->
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">
-          by {{ blog.author.username }} - {{ blog.created_at }}
+      <!-- Descripción recortada -->
+      <div class="relative mb-4 max-h-[6em] overflow-hidden">
+        <p class="text-gray-300 [mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent]">
+          {{ blog.content|safe }}
         </p>
       </div>
-    {% empty %}
-      <p class="text-gray-500 dark:text-gray-400 text-center">No hay nada por aquí...</p>
-    {% endfor %}
-  </div>
+
+      <!-- Promedio de puntuación -->
+      <p class="text-sm text-gray-400 mb-2">
+        <strong>Puntuación promedio: </strong> 
+        {% if blog.average_rating %}
+          {{ blog.average_rating|floatformat:1 }} / 5 ⭐
+        {% else %}
+          No hay puntuaciones aún
+        {% endif %}
+      </p>
+
+      <!-- Autor y fecha -->
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">
+        by {{ blog.author.username }} - {{ blog.created_at }}
+      </p>
+    </a>
+  {% empty %}
+    <p class="text-gray-500 dark:text-gray-400 text-center">No hay nada por aquí...</p>
+  {% endfor %}
+</div>
 
   <!-- Paginación -->
   {% if is_paginated %}

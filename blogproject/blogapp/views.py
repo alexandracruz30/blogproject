@@ -65,10 +65,9 @@ class BlogListView(ListView):
     template_name = 'blogapp/blog_list.html'
     context_object_name = 'blogs'
     paginate_by = 3
-    ordering = ['-created_at']  # Ordena del más reciente al más antiguo
 
     def get_queryset(self):
-        queryset = Blog.objects.annotate(average_rating=Avg('reviews__rating'))  # pylint: disable=no-member
+        queryset = Blog.objects.annotate(average_rating=Avg('reviews__rating')).order_by('-created_at')
         category_slug = self.kwargs.get('category_slug')
         tag_slug = self.kwargs.get('tag_slug')
         if category_slug:
