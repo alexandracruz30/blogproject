@@ -40,10 +40,38 @@
   </div>
 </div>
 <div id='blog_list' class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
+  <h1 class="text-3xl font-bold mb-6 text-center text-white">Últimos blogs</h1>
+  <p class="text-white text-2xl text-center">Enterate de las últimas noticias sobre el anime y manga. ¡Anímate a escribir tus propias opiniones al respecto!</p>
+
+  <!-- Barra de navegación / Encabezado -->
+  <div class="flex justify-between items-center mb-8">
+    {% if user.is_authenticated %}
+      <p class="text-lg text-gray-700 dark:text-gray-300">
+        Bienvenido, <span class="font-semibold">{{ user.username }}</span>!
+      </p>
+      <form method="post" action="{% url 'blogapp:logout' %}" class="inline">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+          Cerrar sesión
+        </button>
+      </form>
+    {% else %}
+      <p class="text-lg text-gray-700 dark:text-gray-300">
+        ¿Nuevo aquí? 
+        <a href="{% url 'blogapp:signup' %}" class="text-blue-500 hover:underline">Regístrate</a> o 
+        <a href="{% url 'blogapp:login' %}" class="text-blue-500 hover:underline">Inicia sesión</a> para unirte.
+      </p>
+    {% endif %}
+  </div>
+
+  <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pt-10">
     <!-- Espacio para los blogs -->
     {% for blog in object_list %}
       <!-- Forma en la que aparecerán los blogs -->
       <div class="bg-[#160c24] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col">
+        
+      <!-- Forma en la que aparecerán los blogs -->
+      <div class="bg-[#612a52] rounded-lg shadow-lg p-6 hover:shadow-xl transition-all duration-700 ease-in-out dark:text-white animate-fade-in aspect-square flex flex-col">
         
         <!-- Imagen del blog (Si aplica) -->
         {% if blog.image %}
@@ -74,6 +102,14 @@
           {% endif %}
         </p>
 
+
+        <!-- Descripción -->
+      <div class="relative mb-4 max-h-[6em] overflow-hidden">
+        <p class="text-gray-300 [mask-image:linear-gradient(to_bottom,black_calc(100%-2rem),transparent]">
+          {{ blog.content|safe }}
+        </p>
+      </div>
+
         <!-- Autor y fecha -->
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-auto">
           by {{ blog.author.username }} - {{ blog.created_at }}
@@ -81,8 +117,10 @@
       </div>
     {% empty %}
       <p class="text-gray-500 dark:text-gray-400 text-center">No hay nada por aquí...</p>
+      <p class="text-gray-500 dark:text-gray-400 text-center">No hay nada por aquí...</p>
     {% endfor %}
   </div>
+
 
   <!-- Paginación -->
   {% if is_paginated %}
