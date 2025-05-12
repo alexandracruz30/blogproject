@@ -88,6 +88,7 @@ class BlogDetailView(DetailView):
         context['average_rating'] = self.object.average_rating()  # Calcula el promedio
         return context
 class BlogCreateView(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('blogapp:login') # URL de redirección si no está autenticado
     model = Blog
     fields = ['title', 'content', 'image']  # Excluye 'category' y 'tags' porque se manejarán manualmente
     fields = ['title', 'content', 'image']  # Incluye el campo de imagen
