@@ -8,7 +8,11 @@
     <ul class="text-white mb-6">
       {% for blog in blogs_con_mas_reviews %}
         <li class="mb-2">
-          <strong>{{ blog.title }}</strong> – {{ blog.num_reviews }} reseña{{ blog.num_reviews|pluralize }}
+          <strong>
+            <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-blue-400 hover:underline">
+              {{ blog.title }}
+            </a>
+          </strong> – {{ blog.num_reviews }} reseña{{ blog.num_reviews|pluralize }}
         </li>
       {% empty %}
         <li>No hay reseñas aún.</li>
@@ -19,7 +23,11 @@
     <ul class="text-white">
       {% for blog in blogs_mejor_puntuados %}
         <li class="mb-2">
-          <strong>{{ blog.title }}</strong> – Promedio:
+          <strong>
+            <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-green-300 hover:underline">
+              {{ blog.title }}
+            </a>
+          </strong> – Promedio:
           {% if blog.promedio_puntuacion %}
             {{ blog.promedio_puntuacion|floatformat:1 }}
           {% else %}
@@ -32,6 +40,7 @@
     </ul>
   </div>
 {% endblock %}
+
 
 
 
