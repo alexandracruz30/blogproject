@@ -27,23 +27,44 @@
           <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
             Nuevo Blog
           </a>
+<<<<<<< HEAD
           
+=======
+         
+          <a href="{% url 'blogapp:blog_stats' %}" class="bg-green-700 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition-all duration-300">
+            📊 Estadísticas
+          </a>
+          
+
+>>>>>>> frontend-alexandra
           <!--  FORMULARIO DE CIERRE DE SESIÓN (logout) con método POST -->
           <!-- Se reemplazó el enlace simple por un formulario seguro -->
           <!--  para evitar ataques CSRF y asegurar que el cierre de sesión sea seguro. -->
           <form method="post" action="{% url 'blogapp:logout' %}" class="inline">
             {% csrf_token %}
-            <button type="submit" class="text-gray-700 dark:text-white hover:underline transition-colors">
+            <button type="submit" class="px-2.5 text-white hover:underline transition-colors">
               Cerrar sesión
             </button>
           </form>
         {% else %}
+<<<<<<< HEAD
          <!--  ENLACES para login y registro si el usuario NO está autenticado -->
           <a href="{% url 'blogapp:login' %}" class="text-gray-700 dark:text-white hover:underline transition-colors">
             Iniciar sesión
           </a>
           <a href="{% url 'blogapp:signup' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
             Registrarse
+=======
+          <!--  ENLACES para login y registro si el usuario NO está autenticado -->
+          <a href="{% url 'blogapp:login' %}" 
+          class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
+          Iniciar sesión
+          </a>
+     
+          <a href="{% url 'blogapp:signup' %}" 
+          class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
+          Registrarse
+>>>>>>> frontend-alexandra
           </a>
         {% endif %}
       </div>
@@ -86,8 +107,11 @@
               class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
               Ver Blogs
             </button>
-            <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
-              Nuevo Blog
+            {% comment %} Verificar que el usuario tenga la sesion iniciada {% endcomment %}
+            <a href="{% url 'blogapp:add_blog' %}" 
+            class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out"
+            onclick="{% if not user.is_authenticated %} event.preventDefault(); alert('Debes iniciar sesión para crear un blog.'); {% endif %}">
+            Nuevo Blog
             </a>
           </div>
         </div>

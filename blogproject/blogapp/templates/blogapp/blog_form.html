@@ -5,6 +5,7 @@
 
 {% block content %}
 <div class="min-h-screen flex items-center justify-center bg-cover bg-center"
+<<<<<<< HEAD
   style="background-image: url('/static/assets/images/fondo_blog_form.jpg');">
 
   <div class="bg-[#0B0C2A]/90 backdrop-blur-md rounded-lg shadow-lg p-8 w-full max-w-5xl">
@@ -100,10 +101,26 @@
         {% if field.errors %}
           <p class="text-red-500 text-sm">{{ field.errors|striptags }}</p>
         {% endif %}
+=======
+  style="background-image: url('/static/assets/images/crearblogfont.jpg');">
+
+  <div class="bg-[#0B0C2A]/90 backdrop-blur-md rounded-lg shadow-lg p-8 w-full max-w-5xl">
+    
+    <h1 class="text-3xl font-extrabold mb-8 text-white text-center">Crea un nuevo blog</h1>
+
+    <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {% csrf_token %}
+      {{ form.media }}
+
+      <!-- Campo: Título -->
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold text-white">Título del blog</label>
+        {{ form.title|add_class:"w-full p-3 rounded-lg bg-white/80 backdrop-blur-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+>>>>>>> frontend-alexandra
       </div>
-    {% endfor %}
 
 
+<<<<<<< HEAD
     <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700 rounded transition-all duration-500 ease-in-out">
       
       Post Blog
@@ -111,6 +128,45 @@
     </button>
   </form>
 {% endblock content %}
+=======
+      <!-- Campo: Contenido -->
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.content.id_for_label }}" class="block text-sm font-semibold text-white">Contenido</label>
+        <textarea name="{{ form.content.name }}" id="{{ form.content.id_for_label }}"
+          class="w-full p-4 min-h-[300px] rounded-lg bg-white/80 backdrop-blur-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-gray-800"
+          placeholder="Escribe aquí...">{{ form.content.value|default:"" }}</textarea>
+      </div>
+
+      <!-- Campo: Imagen -->
+      <div class="space-y-2">
+        <label for="{{ form.image.id_for_label }}" class="block text-sm font-semibold text-white">Imagen</label>
+        {{ form.image|add_class:"bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+      </div>
+
+      <!-- Campo: Categoría -->
+      <div class="space-y-2">
+        <label for="category" class="block text-sm font-medium text-white">Categoría</label>
+        <input type="text" name="category" id="category"
+               class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               placeholder="Escribe una categoría o selecciona una existente">
+      </div>
+
+      <!-- Campo: Etiquetas -->
+      <div class="space-y-2 md:col-span-2">
+        <label for="tags" class="block text-sm font-medium text-white">Etiquetas</label>
+        <input type="text" name="tags" id="tags"
+               class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               placeholder="Escribe etiquetas separadas por comas">
+      </div>
+
+      <!-- Botón de envío -->
+      <div class="pt-4 md:col-span-2">
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+          Publicar Blog
+        </button>
+      </div>
+>>>>>>> frontend-alexandra
     </form>
   </div>
 </div>
@@ -118,4 +174,8 @@
 
 {% block scripts %}
 <!-- Si necesitas scripts personalizados aquí -->
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+>>>>>>> frontend-alexandra

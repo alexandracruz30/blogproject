@@ -15,6 +15,11 @@ from django.urls import reverse
 from .models import Blog, Review, Comment, Category, Tag
 from django import forms  # Import necesario para personalizar widgets
 from django.db.models import Avg
+from django.views.generic import TemplateView
+from django.db.models import Count, Avg
+from .models import Blog
+from django.shortcuts import get_object_or_404
+from blogapp.models import Blog, Review, Comment
 
 class SignUpView(FormView):
     """Vista para el registro de usuarios en el sistema.
@@ -59,10 +64,10 @@ class BlogListView(ListView):
     model = Blog
     template_name = 'blogapp/blog_list.html'
     context_object_name = 'blogs'
-    paginate_by = 3  # Paginación: 10 blogs por página
+    paginate_by = 3
 
     def get_queryset(self):
-        queryset = Blog.objects.annotate(average_rating=Avg('reviews__rating'))  # pylint: disable=no-member
+        queryset = Blog.objects.annotate(average_rating=Avg('reviews__rating')).order_by('-created_at')
         category_slug = self.kwargs.get('category_slug')
         tag_slug = self.kwargs.get('tag_slug')
         if category_slug:
@@ -185,7 +190,8 @@ class CommentCreateView(CreateView):
         """Asigna el usuario actual y la reseña asociada antes de guardar el comentario.
         """
         form.instance.commenter = self.request.user
-        form.instance.review_id = self.kwargs['review_pk']
+        form.instance.review = get_object_or_404(Review, pk=self.kwargs['review_pk']) 
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -195,3 +201,33 @@ class CommentCreateView(CreateView):
             str: URL para ver el detalle del blog asociado al comentario.
         """
         return reverse_lazy('blogapp:blog_detail', kwargs={'pk': self.kwargs['blog_pk']})
+    def form_valid(self, form):
+        print("✅ Comentario válido. Guardando comentario...")
+        form.instance.commenter = self.request.user
+        form.instance.review = get_object_or_404(Review, pk=self.kwargs['review_pk'])
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print("❌ Error al enviar comentario:", form.errors)
+        return super().form_invalid(form)
+
+
+from django.db.models import Count
+
+class BlogStatsView(TemplateView):
+    template_name = "blogapp/blog_stats.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Blogs con más reseñas (según tu solicitud)
+        context['blogs_con_mas_reviews'] = Blog.objects.annotate(
+            num_reviews=Count('reviews')
+        ).order_by('-num_reviews')[:7]
+
+        # Blogs mejor puntuados 
+        context['blogs_mejor_puntuados'] = Blog.objects.annotate(
+            promedio_puntuacion=Avg('reviews__rating')
+        ).order_by('-promedio_puntuacion')[:7]
+
+        return context

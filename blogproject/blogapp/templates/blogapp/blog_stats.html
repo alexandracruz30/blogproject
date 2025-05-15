@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mx-auto py-8 px-4">
+    <h1 class="text-3xl font-bold text-white mb-6">📊 Estadísticas del Blog</h1>
+
+    <h2 class="text-xl text-cyan-400 font-semibold mb-2">💬 Blogs con más reseñas</h2>
+    <ul class="text-white mb-6">
+      {% for blog in blogs_con_mas_reviews %}
+        <li class="mb-2">
+          <strong>
+            <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-blue-400 hover:underline">
+              {{ blog.title }}
+            </a>
+          </strong> – {{ blog.num_reviews }} reseña{{ blog.num_reviews|pluralize }}
+        </li>
+      {% empty %}
+        <li>No hay reseñas aún.</li>
+      {% endfor %}
+    </ul>
+
+    <h2 class="text-xl text-green-400 font-semibold mb-2">⭐ Blogs mejor puntuados</h2>
+    <ul class="text-white">
+      {% for blog in blogs_mejor_puntuados %}
+        <li class="mb-2">
+          <strong>
+            <a href="{% url 'blogapp:blog_detail' blog.pk %}" class="text-green-300 hover:underline">
+              {{ blog.title }}
+            </a>
+          </strong> – Promedio:
+          {% if blog.promedio_puntuacion %}
+            {{ blog.promedio_puntuacion|floatformat:1 }}
+          {% else %}
+            aún sin calificación
+          {% endif %}
+        </li>
+      {% empty %}
+        <li>No hay calificaciones aún.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
+
+
+
+
