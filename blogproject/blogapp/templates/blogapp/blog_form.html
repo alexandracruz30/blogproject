@@ -1,57 +1,67 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
-{% load static %}  
+{% load static %}
 
-{% block content %}  
-  <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Crea un nuevo blog</h1>
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center"
+  style="background-image: url('/static/assets/images/fondo_blog_form.avif');">
 
-  <form method="post" enctype="multipart/form-data" class="space-y-4 transition-all duration-700 ease-in-out animate-fade-in">
-    {% csrf_token %}
-    {{ form.media }}  <!-- Necesario para CKEditor -->
+  <div class="bg-[#0B0C2A]/90 backdrop-blur-md rounded-lg shadow-lg p-8 w-full max-w-5xl">
+    
+    <h1 class="text-3xl font-extrabold mb-8 text-white text-center">Crea un nuevo blog</h1>
 
-    {% for field in form %}
-      <div>
-        <label for="{{ field.id_for_label }}" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-          {{ field.label }}
-        </label>
+    <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {% csrf_token %}
+      {{ form.media }}
 
-        <!-- Campo de imagen -->
-        {% if field.name == 'image' %}
-          <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" 
-            class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        
-        <!-- Campo de texto enriquecido (CKEditor para contenido) -->
-        {% elif field.name == 'content' %}
-          {{ field }}
-
-    <!-- Campo de categoría como entrada de texto -->
-    <div>
-      <label for="category" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Categoria</label>
-      <input type="text" name="category" id="category" 
-            class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            placeholder="Escribe una categoría o selecciona una existente">
-    </div>
-
-    <!-- Campo de etiquetas como entrada de texto -->
-    <div>
-      <label for="tags" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Tags</label>
-      <input type="text" name="tags" id="tags" 
-            class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            placeholder="Escribe etiquetas separadas por comas">
-    </div>
-        <!-- Otros campos -->
-        {% else %}
-          {{ field|add_class:"bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
-        {% endif %}
-
-        {% if field.errors %}
-          <p class="text-red-500 text-sm">{{ field.errors|striptags }}</p>
-        {% endif %}
+      <!-- Campo: Título -->
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold text-white">Título del blog</label>
+        {{ form.title|add_class:"w-full p-3 rounded-lg bg-white/80 backdrop-blur-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
       </div>
-    {% endfor %}
 
-    <button type="submit" class="px-6 py-2 bg-[#ba3259] hover:bg-pink-950 text-white rounded transition-all duration-500 ease-in-out">
-      Publicar
-    </button>
-  </form>
-{% endblock content %}
+
+      <!-- Campo: Contenido (con CKEditor) -->
+      <div class="space-y-2 md:col-span-2">
+        <label for="{{ form.content.id_for_label }}" class="block text-sm font-semibold text-white">Contenido</label>
+        {{ form.content|add_class:"w-full min-h-[300px] rounded-lg bg-white/80 backdrop-blur-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800" }}
+      </div>
+
+
+      <!-- Campo: Imagen -->
+      <div class="space-y-2">
+        <label for="{{ form.image.id_for_label }}" class="block text-sm font-semibold text-white">Imagen</label>
+        {{ form.image|add_class:"bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" }}
+      </div>
+
+      <!-- Campo: Categoría -->
+      <div class="space-y-2">
+        <label for="category" class="block text-sm font-medium text-white">Categoría</label>
+        <input type="text" name="category" id="category"
+               class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               placeholder="Escribe una categoría o selecciona una existente">
+      </div>
+
+      <!-- Campo: Etiquetas -->
+      <div class="space-y-2 md:col-span-2">
+        <label for="tags" class="block text-sm font-medium text-white">Etiquetas</label>
+        <input type="text" name="tags" id="tags"
+               class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+               placeholder="Escribe etiquetas separadas por comas">
+      </div>
+
+      <!-- Botón de envío -->
+      <div class="pt-4 md:col-span-2">
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200">
+          Publicar Blog
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Si necesitas scripts personalizados aquí -->
+{% endblock %}
