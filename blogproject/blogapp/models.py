@@ -12,32 +12,43 @@ from django.db.models import Avg
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.text import slugify
 
+
 class Category(models.Model):
-    """Modelo para categorías de blogs."""
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, blank=True)
+        name = models.CharField(max_length=100, unique=True)
+        slug = models.SlugField(max_length=100, unique=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.slug:  # Genera el slug solo si no existe
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+        def save(self, *args, **kwargs):
+            if not self.slug:
+             base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Category.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+            super().save(*args, **kwargs)
 
-    def __str__(self):
-        return str(self.name)  # Asegura que devuelve una cadena
-
+        def __str__(self):
+            return str(self.name)
 
 class Tag(models.Model):
-    """Modelo para etiquetas de blogs."""
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, blank=True)
+        name = models.CharField(max_length=100, unique=True)
+        slug = models.SlugField(max_length=100, unique=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.slug:  # Genera el slug solo si no existe
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+        def save(self, *args, **kwargs):
+            if not self.slug:
+             base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
+            while Tag.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+            super().save(*args, **kwargs)
 
-    def __str__(self):
-        return str(self.name)  # Asegura que devuelve una cadena
+        def __str__(self):
+         return str(self.name)
+
 # MODELOS
 class Blog(models.Model):
     title = models.CharField(max_length=200)

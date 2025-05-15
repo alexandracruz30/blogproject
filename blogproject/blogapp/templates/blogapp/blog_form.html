@@ -3,7 +3,7 @@
 {% load static %}  
 
 {% block content %}  
-  <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Create a New Blog</h1>
+  <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Crea un nuevo blog</h1>
 
   <form method="post" enctype="multipart/form-data" class="space-y-4 transition-all duration-700 ease-in-out animate-fade-in">
     {% csrf_token %}
@@ -26,7 +26,7 @@
 
     <!-- Campo de categoría como entrada de texto -->
     <div>
-      <label for="category" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Category</label>
+      <label for="category" class="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Categoria</label>
       <input type="text" name="category" id="category" 
             class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" 
             placeholder="Escribe una categoría o selecciona una existente">
@@ -50,8 +50,8 @@
       </div>
     {% endfor %}
 
-    <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-600 dark:hover:bg-blue-700 rounded transition-all duration-500 ease-in-out">
-      Post Blog
+    <button type="submit" class="px-6 py-2 bg-[#ba3259] hover:bg-pink-950 text-white rounded transition-all duration-500 ease-in-out">
+      Publicar
     </button>
   </form>
 {% endblock content %}

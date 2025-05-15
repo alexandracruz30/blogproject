@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import BlogListView, BlogDetailView, ReviewCreateView, CommentCreateView, BlogCreateView,SignUpView, UserLoginView, UserLogoutView
+from .views import BlogStatsView
 
 app_name = 'blogapp'
 
@@ -17,4 +18,6 @@ urlpatterns = [
 
     path('category/<slug:category_slug>/', BlogListView.as_view(), name='blogs_by_category'),  # Filtrar blogs por categoría usando slug
     path('tag/<slug:tag_slug>/', BlogListView.as_view(), name='blogs_by_tag'),  # Filtrar blogs por etiqueta (tag) usando slug
+    path('estadisticas/', BlogStatsView.as_view(), name='blog_stats'), # esto para la parte de estadisticaspath('blog/<int:pk>/', BlogDetailView.as_view(), name='blog_detail'),
+
 ]
