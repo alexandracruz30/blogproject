@@ -8,3 +8,5 @@ package-lock.json
 
 # Tailwind output
 blogproject/static/src/output.css
+
+venv/
