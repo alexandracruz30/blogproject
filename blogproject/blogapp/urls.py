@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import BlogListView, BlogDetailView, ReviewCreateView, CommentCreateView, BlogCreateView,SignUpView, UserLoginView, UserLogoutView
 from .views import BlogStatsView
-from .views2 import (SignUpAPIView, LoginAPIView, BlogListAPIView)
+from .views2 import (SignUpAPIView, LoginAPIView, BlogListAPIView, BlogDetailAPiView)
 
 app_name = 'blogapp'
 
@@ -30,4 +30,5 @@ urlpatterns = [
 
     # Blogs
     path('api/blogs/', BlogListAPIView.as_view()),
+    path('api/blogs/<int:blog_id>/', BlogDetailAPiView.as_view()),
 ]

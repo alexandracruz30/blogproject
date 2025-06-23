@@ -50,3 +50,14 @@ class BlogListAPIView(generics.ListAPIView):
             queryset = queryset.filter(tags__slug=tag_slug)
 
         return queryset
+    
+
+class BlogDetailAPiView(APIView):
+    def get(self, request, blog_id):
+        try:
+            blog = Blog.objects.get(id=blog_id)
+        except Blog.DoesNotExist:
+            return Response({'error': 'Blog no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = BlogSerializer(blog)
+        return Response(serializer.data, status=status.HTTP_200_OK)
