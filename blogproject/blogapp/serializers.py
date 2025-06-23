@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import (Blog,Category,Comment,Review,Tag)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -23,3 +24,71 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+    
+# Categoria ======================
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'slug']
+
+
+# Tag =============================
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name', 'slug']
+
+
+# Review =========================
+class ReviewSerializer(serializers.ModelSerializer):
+    reviewer = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Review
+        fields = ['id', 'reviewer', 'rating', 'comment', 'created_at']
+
+
+# Comment ========================
+class CommentSerializer(serializers.ModelSerializer):
+    commenter = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'review', 'commenter', 'content', 'created_at']
+
+
+# Blog ===========================
+class BlogSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    category = CategorySerializer()
+    tags = TagSerializer(many=True)
+    average_rating = serializers.FloatField(read_only=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Blog
+        fields = [
+            'id', 'title', 'content', 'image', 'author',
+            'created_at', 'category', 'tags',
+            'average_rating', 'reviews'
+        ]
+
+    def create(self, validated_data):
+        category_data = validated_data.pop('category', None)
+        tags_data = validated_data.pop('tags', [])
+        blog = Blog.objects.create(**validated_data)
+
+        # Crear o asociar categoría
+        if category_data:
+            category, _ = Category.objects.get_or_create(**category_data)
+            blog.category = category
+
+        # Crear o asociar tags
+        tag_objs = []
+        for tag_data in tags_data:
+            tag, _ = Tag.objects.get_or_create(**tag_data)
+            tag_objs.append(tag)
+        blog.save()
+        blog.tags.set(tag_objs)
+
+        return blog

@@ -1,9 +1,11 @@
 from django.contrib.auth.models import User
+from .models import Blog, Review, Comment, Category, Tag, Avg
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import (UserSerializer)
-from rest_framework import status
+from .serializers import (UserSerializer, BlogSerializer)
+from rest_framework import status, generics
 from django.shortcuts import get_object_or_404
+
 
 class SignUpAPIView(APIView):
     def post(self, request):
@@ -26,3 +28,25 @@ class LoginAPIView(APIView):
         
         serializer = UserSerializer(instance=user)
         return Response({"user": serializer.data}, status=status.HTTP_200_OK)
+
+
+# =================== Blogs ====================== #
+
+class BlogListAPIView(generics.ListAPIView):
+    serializer_class = BlogSerializer
+
+    def get_queryset(self):
+        queryset = Blog.objects.annotate(
+            average_rating=Avg('reviews__rating')
+        ).order_by('-created_at')
+
+        category_slug = self.request.query_params.get('category_slug')
+        tag_slug = self.request.query_params.get('tag_slug')
+
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
+
+        if tag_slug:
+            queryset = queryset.filter(tags__slug=tag_slug)
+
+        return queryset
