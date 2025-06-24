@@ -60,8 +60,8 @@ class CommentSerializer(serializers.ModelSerializer):
 # Blog ===========================
 class BlogSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    category = CategorySerializer()
-    tags = TagSerializer(many=True)
+    category = CategorySerializer(required=False)
+    tags = TagSerializer(many=True, required=False)
     average_rating = serializers.FloatField(read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
 

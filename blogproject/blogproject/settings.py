@@ -162,3 +162,9 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "darkly",
     "navbar": "navbar-dark",
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
