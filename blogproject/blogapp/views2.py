@@ -1,11 +1,12 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Blog, Review, Comment, Category, Tag, Avg
+from .models import Blog, Review, Category, Tag, Avg
+from django.db.models import Count
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import (UserSerializer, BlogSerializer, ReviewSerializer)
+from .serializers import (UserSerializer, BlogSerializer, ReviewSerializer, CommentSerializer)
 from rest_framework import status, generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -39,6 +40,7 @@ class LoginAPIView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
 
+        # Validar datos del usuario
         user = authenticate(request, username=username, password=password)
 
         if user is None:
@@ -61,7 +63,7 @@ class LoginAPIView(APIView):
 
 class BlogListAPIView(generics.ListAPIView):
     serializer_class = BlogSerializer
-
+    # Mostrar lista completa de blogs
     def get_queryset(self):
         queryset = Blog.objects.annotate(
             average_rating=Avg('reviews__rating')
@@ -82,6 +84,7 @@ class BlogListAPIView(generics.ListAPIView):
 class BlogDetailAPiView(APIView):
     def get(self, request, blog_id):
         try:
+            # Verificar id del blog
             blog = Blog.objects.get(id=blog_id)
         except Blog.DoesNotExist:
             return Response({'error': 'Blog no encontrado'}, status=status.HTTP_404_NOT_FOUND)
@@ -145,14 +148,52 @@ class ReviewCreateAPIView(APIView):
         except Blog.DoesNotExist:
             return Response({'error': 'Blog no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Validar si ya hay una reseña
+        # Verificar si el usuario ya realizo una review
         if Review.objects.filter(blog=blog, reviewer=user).exists():
             return Response({'error': 'Ya has enviado una reseña para este blog'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Crear la reseña manualmente
+        # Permitir crear la review
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(reviewer=user, blog=blog)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+# ================== Comments ========================
+class CommentCreateAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, review_pk):
+        review = get_object_or_404(Review, pk=review_pk)
+
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(commenter=request.user, review=review)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# =================== Stats ==========================
+class BlogStatsAPIView(APIView):
+    def get(self, request):
+        # Blogs con más reseñas
+        most_reviewed_blogs = Blog.objects.annotate(
+            num_reviews=Count('reviews')
+        ).order_by('-num_reviews')[:7]
+
+        # Blogs mejor puntuados
+        top_rated_blogs = Blog.objects.annotate(
+            promedio_puntuacion=Avg('reviews__rating')
+        ).order_by('-promedio_puntuacion')[:7]
+
+        # Serializar de resultados
+        most_reviewed_serializer = BlogSerializer(most_reviewed_blogs, many=True)
+        top_rated_serializer = BlogSerializer(top_rated_blogs, many=True)
+
+        return Response({
+            'blogs_con_mas_reviews': most_reviewed_serializer.data,
+            'blogs_mejor_puntuados': top_rated_serializer.data,
+        }, status=status.HTTP_200_OK)

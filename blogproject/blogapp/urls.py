@@ -6,7 +6,9 @@ from .views2 import (SignUpAPIView,
                      BlogListAPIView,
                      BlogDetailAPiView,
                      BlogCreateAPIView,
-                     ReviewCreateAPIView)
+                     ReviewCreateAPIView,
+                     CommentCreateAPIView,
+                     BlogStatsAPIView)
 
 app_name = 'blogapp'
 
@@ -40,4 +42,10 @@ urlpatterns = [
 
     # Reviews
     path('api/blogs/<int:blog_id>/reviews/', ReviewCreateAPIView.as_view()),
+
+    # Comments
+    path('api/reviews/<int:review_pk>/comments/', CommentCreateAPIView.as_view()),
+
+    # Stats
+    path('api/blogs/stats/', BlogStatsAPIView.as_view()),
 ]
