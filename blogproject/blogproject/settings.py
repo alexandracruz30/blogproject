@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -153,6 +155,10 @@ LOGIN_REDIRECT_URL = 'blogapp:blog_list'  # Redirige aquí después de iniciar s
 LOGOUT_REDIRECT_URL = 'blogapp:blog_list'  # Redirige aquí después de cerrar sesión, Anexado
 
 
+# Configuración de CORS para permitir solicitudes desde el frontend
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 # URL a la que se redirige a los usuarios no autenticados
 #LOGIN_URL = '/login/'
 

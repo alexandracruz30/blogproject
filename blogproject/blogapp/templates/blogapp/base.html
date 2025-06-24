@@ -27,9 +27,9 @@
           <a href="{% url 'blogapp:add_blog' %}" class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
             Nuevo Blog
           </a>
-         
+          <!--  BOTÓN: Ver blogs (solo si el usuario está logueado) -->      
           <a href="{% url 'blogapp:blog_stats' %}" class="bg-green-700 hover:bg-green-600 text-white font-medium py-2 px-4 rounded transition-all duration-300">
-             Estadísticas
+              Estadísticas
           </a>
           
 
@@ -47,7 +47,7 @@
           class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
           Iniciar sesión
           </a>
-     
+    
           <a href="{% url 'blogapp:signup' %}" 
           class="text-white bg-[#ba3259] hover:bg-pink-950 dark:text-white font-medium py-2 px-4 rounded transition-all duration-500 ease-in-out">
           Registrarse
