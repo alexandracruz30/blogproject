@@ -8,7 +8,9 @@ from .views2 import (SignUpAPIView,
                      BlogCreateAPIView,
                      ReviewCreateAPIView,
                      CommentCreateAPIView,
-                     BlogStatsAPIView)
+                     BlogStatsAPIView,
+                     ListTagsAPIView,
+                     ListCategoryAPIView)
 
 app_name = 'blogapp'
 
@@ -48,4 +50,11 @@ urlpatterns = [
 
     # Stats
     path('api/blogs/stats/', BlogStatsAPIView.as_view()),
+
+    # Tags
+    path('api/tags/', ListTagsAPIView.as_view()),
+
+
+    # CAtegory
+    path('api/categories/', ListCategoryAPIView.as_view()),
 ]

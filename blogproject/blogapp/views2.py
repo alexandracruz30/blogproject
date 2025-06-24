@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import (UserSerializer, BlogSerializer, ReviewSerializer, CommentSerializer)
+from .serializers import (UserSerializer, BlogSerializer, ReviewSerializer, CommentSerializer, TagSerializer, CategorySerializer)
 from rest_framework import status, generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -197,3 +197,19 @@ class BlogStatsAPIView(APIView):
             'blogs_con_mas_reviews': most_reviewed_serializer.data,
             'blogs_mejor_puntuados': top_rated_serializer.data,
         }, status=status.HTTP_200_OK)
+
+
+# ================= Tags ====================
+class ListTagsAPIView(generics.ListAPIView):
+    serializer_class = TagSerializer
+    def get_queryset(self):
+        queryset = Tag.objects.annotate().order_by('-id')
+        return queryset
+    
+
+# ================= CAtegory ====================
+class ListCategoryAPIView(generics.ListAPIView):
+    serializer_class = CategorySerializer
+    def get_queryset(self):
+        queryset = Category.objects.annotate().order_by('-id')
+        return queryset
