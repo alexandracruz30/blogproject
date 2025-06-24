@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import (UserSerializer, BlogSerializer)
-from rest_framework import status, generics
+from .serializers import (UserSerializer, BlogSerializer, ReviewSerializer)
+from rest_framework import status, generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
@@ -105,11 +105,11 @@ class BlogCreateAPIView(APIView):
             category, _ = Category.objects.get_or_create(name=category_name.strip())
             data['category'] = category.id
 
-        # Extraer tags para manejar ManyToMany después
+        # Extraer tags para manejar ManyToMany
         tags_input = data.pop('tags', None)
         tag_objs = []
         if tags_input:
-            # Si se recibe como lista (p. ej., ['tag1, tag2']) desde form-data
+            # Si la lista se escribe asi ['tag1, tag2']
             if isinstance(tags_input, list):
                 tags_input = tags_input[0]
 
@@ -119,14 +119,40 @@ class BlogCreateAPIView(APIView):
                 tag_objs.append(tag)
 
 
-        # Crear serializer sin author (lo asignamos manualmente luego)
+        # Se crea serializer
         serializer = BlogSerializer(data=data)
         if serializer.is_valid():
-            blog = serializer.save(author=request.user)  # asignar autor aquí
+            # Asignar autor
+            blog = serializer.save(author=request.user)
             # Asignar tags ManyToMany
             if tag_objs:
                 blog.tags.set(tag_objs)
 
             return Response(BlogSerializer(blog).data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# ==================== Reviews =====================
+class ReviewCreateAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, blog_id):
+        user = request.user
+
+        # Validar si el blog existe
+        try:
+            blog = Blog.objects.get(id=blog_id)
+        except Blog.DoesNotExist:
+            return Response({'error': 'Blog no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Validar si ya hay una reseña
+        if Review.objects.filter(blog=blog, reviewer=user).exists():
+            return Response({'error': 'Ya has enviado una reseña para este blog'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Crear la reseña manualmente
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(reviewer=user, blog=blog)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
