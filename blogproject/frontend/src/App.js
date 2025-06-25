@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AddBlog from './pages/AddBlog';
 import BlogDetail from './pages/BlogDetail';
+import CommentForm from './pages/CommentForm';
 import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
@@ -58,6 +59,14 @@ function App() {
             element={
               <Layout>
                 <Signup />
+              </Layout>
+            }
+          />
+          <Route
+            path="/blogs/:blogId/reviews/:reviewId/add-comment"
+            element={
+              <Layout>
+                <CommentForm />
               </Layout>
             }
           />

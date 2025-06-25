@@ -76,8 +76,16 @@ function BlogDetail() {
                     </p>
                     {/* Imagen */}
                     {blog.image && (
-                        <img src={blog.image} alt={blog.title} className="w-full h-auto rounded-xl mb-4 mt-2" />
-                    )}
+    <img
+        src={
+            blog.image.startsWith("http")
+                ? blog.image
+                : `http://localhost:8000${blog.image}`
+        }
+        alt={blog.title}
+        className="w-full h-auto rounded-xl mb-4 mt-2"
+    />
+)}
                 </article>
 
                 {/* Reseñas */}
