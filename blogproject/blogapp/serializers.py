@@ -39,24 +39,29 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'slug']
 
 
-# Review =========================
-class ReviewSerializer(serializers.ModelSerializer):
-    reviewer = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Review
-        fields = ['id', 'reviewer', 'rating', 'comment', 'created_at']
-        read_only_fields = ['reviewer', 'blog', 'created_at']
-
-
 # Comment ========================
 class CommentSerializer(serializers.ModelSerializer):
     commenter = UserSerializer(read_only=True)
 
     class Meta:
         model = Comment
-        fields = ['id', 'review', 'commenter', 'content', 'created_at']
+        fields = ['id', 'commenter', 'content', 'created_at']
         read_only_fields = ['commenter', 'review']
+
+
+# Review =========================
+class ReviewSerializer(serializers.ModelSerializer):
+    reviewer = UserSerializer(read_only=True)
+    comments = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Review
+        fields = ['id', 'reviewer', 'rating', 'comment', 'created_at', 'comments']
+        read_only_fields = ['reviewer', 'blog', 'created_at']
+    
+    def get_comments(self, obj):
+        comments = obj.comments.all()
+        return CommentSerializer(comments, many=True).data
 
 
 # Blog ===========================

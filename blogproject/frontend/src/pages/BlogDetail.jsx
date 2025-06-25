@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 
 function BlogDetail() {
     const { id } = useParams();
+    const location = useLocation();
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     
     useEffect(() => {
+        setLoading(true);
+        setBlog(null);
+        setError("");
+        
         fetch(`http://localhost:8000/api/blogs/${id}/`)
         .then(res => res.json())
         .then(data => {
@@ -18,7 +23,7 @@ function BlogDetail() {
             setError("No se pudo cargar el blog");
             setLoading(false);
         });
-    }, [id]);
+    }, [id, location.pathname]); // Se ejecuta cuando cambia el id o cuando regresa de otra página
 
     if (loading) return <div className="text-center text-white">Cargando...</div>;
     if (error) return <div className="text-center text-red-400">{error}</div>;
