@@ -37,7 +37,10 @@ function BlogDetail() {
             <div className="bg-[#160c24]/90 p-6 rounded-lg shadow-lg transition-all duration-700 ease-in-out text-white animate-fade-in max-w-3xl w-full">
                 <article>
                     <h1 className="font-hitake text-3xl font-bold mb-2 text-[#ff695c]">{blog.title}</h1>
-                    <p className="text-gray-300 mb-4">{blog.content}</p>
+                    <div
+                    className="line-clamp-3 text-gray-300"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                    ></div>
                     <p className="text-sm text-gray-400">Por {blog.author?.username} - {blog.created_at}</p>
                     {/* Categoría */}
                     {blog.category && (
