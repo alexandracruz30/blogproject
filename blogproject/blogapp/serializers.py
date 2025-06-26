@@ -71,14 +71,18 @@ class BlogSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, required=False)
     average_rating = serializers.FloatField(read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
+    num_reviews = serializers.IntegerField(read_only=True)
+    promedio_puntuacion = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Blog
         fields = [
-            'id', 'title', 'content', 'image', 'author',
-            'created_at', 'category', 'tags',
-            'average_rating', 'reviews'
-        ]
+    'id', 'title', 'content', 'image', 'author',
+    'created_at', 'category', 'tags',
+    'average_rating', 'reviews', 
+    'num_reviews',
+    'promedio_puntuacion'
+]
 
     def create(self, validated_data):
         category_data = validated_data.pop('category', None)
