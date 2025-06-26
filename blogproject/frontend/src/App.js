@@ -8,6 +8,8 @@ import AddBlog from './pages/AddBlog';
 import BlogDetail from './pages/BlogDetail';
 import CommentForm from './pages/CommentForm';
 import { AuthProvider } from './contexts/AuthContext';
+import AddReview from './pages/AddReview';
+import './App.css';
 
 function App() {
   return (
@@ -51,6 +53,14 @@ function App() {
             element={
               <Layout>
                 <Login />
+              </Layout>
+            }
+          />
+          <Route
+            path="/blogs/:blogId/add-review"
+            element={
+              <Layout>
+                <AddReview />
               </Layout>
             }
           />

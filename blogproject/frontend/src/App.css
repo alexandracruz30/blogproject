@@ -2,6 +2,19 @@
   text-align: center;
 }
 
+/* Estilos personalizados para CKEditor - aseguran que el texto se vea correctamente */
+.ck-editor__editable {
+  min-height: 200px !important;
+  color: #111 !important;
+  background-color: #fff !important;
+}
+
+.ck-content {
+  color: #111 !important;
+  background-color: #fff !important;
+}
+
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

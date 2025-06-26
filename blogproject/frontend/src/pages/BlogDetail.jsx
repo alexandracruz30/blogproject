@@ -102,7 +102,10 @@ function BlogDetail() {
                                 <p className="text-[#ff695c] font-medium">
                                     {review.reviewer?.username} - {review.rating}/5 ⭐
                                 </p>
-                                <p className="text-gray-300">{review.comment}</p>
+                                <div
+                                className="text-gray-300 prose prose-invert max-w-none"
+                                dangerouslySetInnerHTML={{ __html: review.comment }}
+                                 ></div>
                                 {/* Agregar comentario a la review */}
                                 <Link
                                     to={`/blogs/${blog.id}/reviews/${review.id}/add-comment`}

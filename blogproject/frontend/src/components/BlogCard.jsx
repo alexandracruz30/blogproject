@@ -51,10 +51,18 @@ export default function BlogCard({ blog }) {
         )}
 
         {/* Descripción/corto del contenido */}
-        <p className="mb-2 text-gray-200 line-clamp-3">
-            {blog.description || blog.content?.slice(0, 120) || ""}
-            {(blog.description || blog.content) && "..."}
-        </p>
+            {blog.description ? (
+            <p className="mb-2 text-gray-200 line-clamp-3">
+                {blog.description}
+            </p>
+            ) : blog.content ? (
+            <div
+                className="mb-2 text-gray-200 line-clamp-3"
+                dangerouslySetInnerHTML={{
+                __html: blog.content.slice(0, 200) + "..."
+                }}
+            ></div>
+            ) : null}
 
         {/* Stats: puntuación y reseñas */}
         <div className="flex items-center gap-4 mb-2">
